@@ -1,7 +1,7 @@
-# Project: NAME
+# Project: Java Linter - Option 4
 
 ## Contributors
-NAME, NAME, NAME
+Ishaan Jalan, Viraj Agarwala
 
 ## Dependencies
 - LANGUAGE AND VERSION
