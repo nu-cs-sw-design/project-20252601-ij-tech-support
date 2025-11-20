@@ -10,6 +10,11 @@ import org.objectweb.asm.tree.ClassNode;
 public class MyFirstLinter {
 
 	public static void main(String[] args) throws IOException {
+		if (args.length > 0 && "--uml".equals(args[0])) {
+			runUmlMode(args);
+			return;
+		}
+
 		List<LintRule> lintRules = new ArrayList<>();
 		lintRules.add(new NamingConventionRule());
 		lintRules.add(new EqualsHashCodeRule());
@@ -34,6 +39,22 @@ public class MyFirstLinter {
 				for (Violation violation : violations) {
 					System.out.println(violation);
 				}
+			}
+		}
+	}
+
+	private static void runUmlMode(String[] args) throws IOException {
+		for (int i = 1; i < args.length; i++) {
+			String className = args[i];
+			ClassNode classNode = new ClassNode();
+			ClassReader reader = new ClassReader(className);
+			reader.accept(classNode, ClassReader.EXPAND_FRAMES);
+
+			String plantUml = PlantUmlGenerator.generateClassDiagram(classNode);
+			System.out.println(plantUml);
+
+			if (i < args.length - 1) {
+				System.out.println();
 			}
 		}
 	}
