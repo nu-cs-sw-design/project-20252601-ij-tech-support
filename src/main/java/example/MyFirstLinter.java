@@ -13,6 +13,7 @@ public class MyFirstLinter {
 		List<LintRule> lintRules = new ArrayList<>();
 		lintRules.add(new NamingConventionRule());
 		lintRules.add(new EqualsHashCodeRule());
+		lintRules.add(new RedundantInterfaceRule());
 
 		for (String className : args) {
 			ClassNode classNode = new ClassNode();
