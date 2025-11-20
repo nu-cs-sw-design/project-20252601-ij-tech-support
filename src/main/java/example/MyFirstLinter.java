@@ -1,6 +1,7 @@
 package example;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.objectweb.asm.ClassReader;
@@ -34,6 +35,9 @@ public class MyFirstLinter {
 		// TODO: Learn how to create separate Run Configurations so you can run
 		// your code on different programs without changing the code each time.
 		
+		List<LintRule> lintRules = new ArrayList<>();
+		lintRules.add(new NamingConventionRule());
+		
 		for (String className : args) {
 			// The 3 steps read in a Java class:
 			// 1. ASM's ClassReader does the heavy lifting of parsing the compiled Java class.
@@ -51,7 +55,18 @@ public class MyFirstLinter {
 
 			printFields(classNode);
 			
-			printMethods(classNode);
+			PrintMethods(classNode);
+			
+			runLintRules(classNode, lintRules);
+		}
+	}
+	
+	private static void runLintRules(ClassNode classNode, List<LintRule> lintRules) {
+		for (LintRule rule : lintRules) {
+			List<Violation> violations = rule.check(classNode);
+			for (Violation violation : violations) {
+				System.out.println("Lint violation: " + violation);
+			}
 		}
 	}
 
@@ -86,7 +101,7 @@ public class MyFirstLinter {
 		}
 	}
 
-	private static void printMethods(ClassNode classNode) {
+	private static void PrintMethods(ClassNode classNode) {
 		List<MethodNode> methods = (List<MethodNode>) classNode.methods;
 		for (MethodNode method : methods) {
 			System.out.println("	Method: " + method.name);
@@ -111,11 +126,11 @@ public class MyFirstLinter {
 			System.out.println();
 
 			// Print the method's instructions
-			printInstructions(method);
+			PrintInstructions(method);
 		}
 	}
 
-	private static void printInstructions(MethodNode methodNode) {
+	private static void PrintInstructions(MethodNode methodNode) {
 		InsnList instructions = methodNode.instructions;
 		for (int i = 0; i < instructions.size(); i++) {
 
