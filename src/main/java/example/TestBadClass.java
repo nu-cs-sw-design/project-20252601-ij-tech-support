@@ -6,6 +6,8 @@ public abstract class TestBadClass implements Runnable, Comparable<TestBadClass>
 	public String another_bad_field = "oops"; // bad: underscores in non-constant
 
 	private int goodField = 5; // normal looking field
+	private TestBadClass() {
+	}
 
 	public void BadMethod() { // bad: starts uppercase
 		System.out.println("Bad method");

@@ -19,6 +19,7 @@ public class MyFirstLinter {
 		lintRules.add(new NamingConventionRule());
 		lintRules.add(new EqualsHashCodeRule());
 		lintRules.add(new RedundantInterfaceRule());
+		lintRules.add(new NonPublicConstructorRule());
 
 		for (String className : args) {
 			ClassNode classNode = new ClassNode();
