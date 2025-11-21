@@ -31,11 +31,11 @@ dependencies {
     testImplementation group: 'org.easymock', name: 'easymock', version: '4.2'
 
     // https://mvnrepository.com/artifact/org.ow2.asm/asm
-    implementation 'org.ow2.asm:asm:9.2'
+    implementation 'org.ow2.asm:asm:9.7'
     // https://mvnrepository.com/artifact/org.ow2.asm/asm-tree
-    implementation 'org.ow2.asm:asm-tree:9.2'
+    implementation 'org.ow2.asm:asm-tree:9.7'
     // https://mvnrepository.com/artifact/org.ow2.asm/asm-analysis
-    implementation 'org.ow2.asm:asm-analysis:9.2'
+    implementation 'org.ow2.asm:asm-analysis:9.7'
 }
 
 test {
