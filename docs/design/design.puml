@@ -1,2 +1,82 @@
 @startuml
+package example {
+  interface LintRule {
+    +check(node: ClassNode): List<Violation>
+  }
+
+  class MyFirstLinter {
+    +main(args: String[])
+    -runUmlMode(args: String[])
+    -runLlmMode(args: String[])
+    -buildDesignSummary(node: ClassNode): String
+  }
+
+  class LLMDesignAdvisor {
+    +analyzeDesign(designSummary: String): String
+    -buildRequestBody(designSummary: String): String
+    -extractContentFromResponse(body: String): String
+  }
+
+  class PlantUmlGenerator {
+    +generateClassDiagram(node: ClassNode): String
+  }
+
+  class Violation {
+    -target: Target
+    -name: String
+    -message: String
+    +getTarget(): Target
+    +getName(): String
+    +getMessage(): String
+  }
+
+  enum Target {
+    CLASS
+    FIELD
+    METHOD
+  }
+
+  class NamingConventionRule
+  class EqualsHashCodeRule
+  class RedundantInterfaceRule
+  class NonPublicConstructorRule
+
+  class GoodClass {
+    -count: int
+    -DEFAULT_NAME: String
+    +doWork()
+    +getCount(): int
+    +run()
+    +equals(o: Object): boolean
+    +hashCode(): int
+  }
+
+  abstract class TestBadClass {
+    +BadFieldName: int
+    +another_bad_field: String
+    -goodField: int
+    -TestBadClass()
+    +BadMethod()
+    +do_Weird()
+    +normalMethod()
+    +equals(o: Object): boolean
+  }
+}
+
+LintRule <|.. NamingConventionRule
+LintRule <|.. EqualsHashCodeRule
+LintRule <|.. RedundantInterfaceRule
+LintRule <|.. NonPublicConstructorRule
+LintRule --> Violation
+
+MyFirstLinter --> LintRule
+MyFirstLinter ..> PlantUmlGenerator
+MyFirstLinter ..> LLMDesignAdvisor
+PlantUmlGenerator ..> ClassNode
+LLMDesignAdvisor ..> HttpClient
+
+GoodClass ..|> Runnable
+TestBadClass ..|> Runnable
+TestBadClass ..|> Comparable
+
 @enduml
