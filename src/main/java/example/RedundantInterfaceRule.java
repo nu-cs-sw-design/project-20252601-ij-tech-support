@@ -13,11 +13,11 @@ import org.objectweb.asm.tree.MethodNode;
  * Lint rule that flags interfaces a class implements without overriding any of
  * their abstract methods.
  */
-public class RedundantInterfaceRule implements LintRule {
+public class RedundantInterfaceRule extends RuleTemplate {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Violation> check(ClassNode node) {
+	protected List<Violation> collectViolations(ClassNode node) {
 		List<Violation> violations = new ArrayList<>();
 
 		List<String> interfaces = (List<String>) node.interfaces;

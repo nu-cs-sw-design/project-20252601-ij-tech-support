@@ -14,11 +14,11 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public final class PlantUmlGenerator {
 
-	private PlantUmlGenerator() {
-	}
+	// Public constructor so callers can create an instance; stateless utility.
+	public PlantUmlGenerator() {}
 
 	@SuppressWarnings("unchecked")
-	public static String generateClassDiagram(ClassNode node) {
+	public String generateClassDiagram(ClassNode node) {
 		String simpleName = simpleClassName(node.name);
 		StringBuilder sb = new StringBuilder();
 		sb.append("@startuml\n");

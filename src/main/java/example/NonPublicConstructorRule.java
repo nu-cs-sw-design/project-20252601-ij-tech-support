@@ -11,10 +11,10 @@ import org.objectweb.asm.tree.MethodNode;
 /**
  * Flags classes that cannot be publicly constructed.
  */
-public class NonPublicConstructorRule implements LintRule {
+public class NonPublicConstructorRule extends RuleTemplate {
 
 	@Override
-	public List<Violation> check(ClassNode node) {
+	protected List<Violation> collectViolations(ClassNode node) {
 		List<Violation> violations = new ArrayList<>();
 
 		List<MethodNode> constructors = findConstructors(node);

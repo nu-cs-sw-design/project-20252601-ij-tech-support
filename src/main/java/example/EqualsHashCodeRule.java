@@ -10,11 +10,11 @@ import org.objectweb.asm.tree.MethodNode;
 /**
  * Lint rule that ensures classes implement equals and hashCode consistently.
  */
-public class EqualsHashCodeRule implements LintRule {
+public class EqualsHashCodeRule extends RuleTemplate {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Violation> check(ClassNode node) {
+	protected List<Violation> collectViolations(ClassNode node) {
 		List<Violation> violations = new ArrayList<>();
 		boolean definesEquals = false;
 		boolean definesHashCode = false;

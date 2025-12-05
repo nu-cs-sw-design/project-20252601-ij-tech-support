@@ -13,7 +13,7 @@ import org.objectweb.asm.tree.MethodNode;
  * Lint rule that enforces common Java naming conventions on classes, methods,
  * and fields using ASM tree nodes.
  */
-public class NamingConventionRule implements LintRule {
+public class NamingConventionRule extends RuleTemplate {
 
 	private static final Pattern PASCAL_CASE = Pattern.compile("[A-Z][A-Za-z0-9]*");
 	private static final Pattern CAMEL_CASE = Pattern.compile("[a-z][A-Za-z0-9]*");
@@ -21,7 +21,7 @@ public class NamingConventionRule implements LintRule {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Violation> check(ClassNode node) {
+	protected List<Violation> collectViolations(ClassNode node) {
 		List<Violation> violations = new ArrayList<>();
 
 		String classSimpleName = simpleClassName(node.name);

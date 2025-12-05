@@ -1,33 +1,68 @@
 @startuml
-package example {
+
+package presentation {
+  class LintCli {
+    +main(args: String[])
+    -parse(args: String[]): Command
+  }
+
+  class LintApplication {
+    +run(command: Command)
+    -runLint(targets: List<String>)
+    -runUml(targets: List<String>)
+    -runAdvice(targets: List<String>)
+    -buildDesignSummary(node: ClassNode): String
+  }
+
+  class Command {
+    +mode: Mode
+    +targets: List<String>
+  }
+
+  enum Mode {
+    LINT
+    UML
+    ADVICE
+  }
+
+  interface Reporter {
+    +report(result: LintResult)
+  }
+
+  class ConsoleReporter {
+    +report(result: LintResult)
+  }
+}
+
+package domain {
   interface LintRule {
     +check(node: ClassNode): List<Violation>
   }
 
-  class MyFirstLinter {
-    +main(args: String[])
-    -runUmlMode(args: String[])
-    -runLlmMode(args: String[])
-    -buildDesignSummary(node: ClassNode): String
+  abstract class RuleTemplate {
+    +check(node: ClassNode): List<Violation>
+    #collectViolations(node: ClassNode): List<Violation>
   }
 
-  class LLMDesignAdvisor {
-    +analyzeDesign(designSummary: String): String
-    -buildRequestBody(designSummary: String): String
-    -extractContentFromResponse(body: String): String
+  class NamingConventionRule
+  class EqualsHashCodeRule
+  class RedundantInterfaceRule
+  class NonPublicConstructorRule
+
+  interface RuleRegistry {
+    +rules(): List<LintRule>
   }
 
-  class PlantUmlGenerator {
-    +generateClassDiagram(node: ClassNode): String
+  class DefaultRuleRegistry {
+    -rules: List<LintRule>
+    +rules(): List<LintRule>
+    +register(rule: LintRule)
   }
 
   class Violation {
-    -target: Target
-    -name: String
-    -message: String
-    +getTarget(): Target
-    +getName(): String
-    +getMessage(): String
+    +target: Target
+    +name: String
+    +message: String
   }
 
   enum Target {
@@ -36,47 +71,43 @@ package example {
     METHOD
   }
 
-  class NamingConventionRule
-  class EqualsHashCodeRule
-  class RedundantInterfaceRule
-  class NonPublicConstructorRule
-
-  class GoodClass {
-    -count: int
-    -DEFAULT_NAME: String
-    +doWork()
-    +getCount(): int
-    +run()
-    +equals(o: Object): boolean
-    +hashCode(): int
-  }
-
-  abstract class TestBadClass {
-    +BadFieldName: int
-    +another_bad_field: String
-    -goodField: int
-    -TestBadClass()
-    +BadMethod()
-    +do_Weird()
-    +normalMethod()
-    +equals(o: Object): boolean
+  class LintResult {
+    +violations: List<Violation>
+    +hasErrors(): boolean
   }
 }
 
-LintRule <|.. NamingConventionRule
-LintRule <|.. EqualsHashCodeRule
-LintRule <|.. RedundantInterfaceRule
-LintRule <|.. NonPublicConstructorRule
+package datasource {
+  class PlantUmlGenerator {
+    +generateClassDiagram(node: ClassNode): String
+  }
+
+  class LLMDesignAdvisor {
+    +analyzeDesign(summary: String): String
+  }
+}
+
+LintCli --> LintApplication
+LintApplication --> RuleRegistry
+LintApplication --> LintRule
+LintApplication --> Reporter
+LintApplication ..> PlantUmlGenerator
+LintApplication ..> LLMDesignAdvisor
+
+RuleRegistry --> LintRule
+RuleTemplate <|-- NamingConventionRule
+RuleTemplate <|-- EqualsHashCodeRule
+RuleTemplate <|-- RedundantInterfaceRule
+RuleTemplate <|-- NonPublicConstructorRule
 LintRule --> Violation
+LintResult ..> Violation
+Violation ..> Target
 
-MyFirstLinter --> LintRule
-MyFirstLinter ..> PlantUmlGenerator
-MyFirstLinter ..> LLMDesignAdvisor
+Reporter <|.. ConsoleReporter
+
 PlantUmlGenerator ..> ClassNode
-LLMDesignAdvisor ..> HttpClient
-
-GoodClass ..|> Runnable
-TestBadClass ..|> Runnable
-TestBadClass ..|> Comparable
+LintRule ..> ClassNode
+LintApplication ..> ClassNode
+LLMDesignAdvisor ..> LintApplication
 
 @enduml
